@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/TelhaAI/IKE/packages/ontology-schema/ontology.schema.json",
+  "title": "IKE Ontology",
+  "description": "Draft format for an ontology designed in the IKE Design Studio.",
+  "type": "object",
+  "required": ["id", "name", "version", "concepts"],
+  "properties": {
+    "id": { "type": "string" },
+    "name": { "type": "string" },
+    "version": { "type": "string" },
+    "description": { "type": "string" },
+    "concepts": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/concept" }
+    },
+    "relationships": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/relationship" }
+    }
+  },
+  "$defs": {
+    "concept": {
+      "type": "object",
+      "required": ["id", "label"],
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" },
+        "description": { "type": "string" },
+        "parent": { "type": "string", "description": "id of the broader concept, if any" },
+        "properties": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "type"],
+            "properties": {
+              "name": { "type": "string" },
+              "type": { "type": "string" },
+              "required": { "type": "boolean" }
+            }
+          }
+        },
+        "evidence": { "$ref": "#/$defs/evidence" }
+      }
+    },
+    "relationship": {
+      "type": "object",
+      "required": ["id", "type", "source", "target"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string" },
+        "source": { "type": "string" },
+        "target": { "type": "string" },
+        "cardinality": { "enum": ["one-to-one", "one-to-many", "many-to-one", "many-to-many"] },
+        "evidence": { "$ref": "#/$defs/evidence" }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "description": "What a proposal is based on, so a person can review it.",
+      "items": {
+        "type": "object",
+        "required": ["source"],
+        "properties": {
+          "source": { "type": "string" },
+          "excerpt": { "type": "string" },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+          "confidence_calibrated": { "type": "boolean", "default": false }
+        }
+      }
+    }
+  }
+}
